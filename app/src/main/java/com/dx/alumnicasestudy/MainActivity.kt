@@ -38,6 +38,8 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
+//instantiate
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
