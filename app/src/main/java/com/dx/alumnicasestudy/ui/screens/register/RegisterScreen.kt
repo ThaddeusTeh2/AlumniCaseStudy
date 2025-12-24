@@ -27,6 +27,16 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun RegisterScreen() {
+    // MVP Registration requirements:
+    // Required fields only: name, email, graduation_year, department, job_title, company, password
+    // Remove out-of-scope fields (domain, city/country, contactPref, etc.) for MVP
+    // On Sign up:
+    // - Call AuthRepository.register(...)
+    // - Create Firebase Auth user
+    // - Create Firestore users/{uid} with status="pending" and role="user"
+    // - Navigate to PendingGate screen after successful registration
+    // "Sign In!" navigates back to Login screen
+
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var pass by remember { mutableStateOf("") }

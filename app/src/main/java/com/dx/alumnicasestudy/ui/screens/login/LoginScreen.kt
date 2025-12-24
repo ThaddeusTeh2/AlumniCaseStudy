@@ -27,6 +27,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun LoginScreen() {
+    // UI fields exist; behavior to be wired:
+    // - Replace "Fullname" field labels with Email & Password
+    // - On Login button, call AuthRepository.login(email, password)
+    // - After successful login, fetch profile; if approved -> navigate to Directory; else -> PendingGate
+    // - "Sign up!" navigates to RegisterScreen
+
     var name by remember { mutableStateOf("") }
     var pass by remember { mutableStateOf("") }
 
@@ -70,7 +76,7 @@ fun LoginScreen() {
                 TextButton(
                     onClick = {}
                 ) {
-                    "Sign up!"
+                    // Button text: "Sign up!"; should navigate to RegisterScreen
                 }
             }
         }
