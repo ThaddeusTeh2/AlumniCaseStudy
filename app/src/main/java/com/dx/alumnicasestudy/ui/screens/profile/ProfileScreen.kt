@@ -50,6 +50,9 @@ fun ProfileScreen(
             Column(
                 Modifier.fillMaxWidth().padding(16.dp)
             ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {  }
                 Text("Name: username", fontSize = 24.sp, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(4.dp))
                 Text("Contacts:", style= MaterialTheme.typography.titleMedium)
