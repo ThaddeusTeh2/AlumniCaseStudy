@@ -5,12 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.dx.alumnicasestudy.ui.theme.AlumniCaseStudyTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,33 +15,16 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AlumniCaseStudyTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                Scaffold(modifier = Modifier.fillMaxSize()) {
+                    // val innerPadding = it // Content padding; will be used when NavHost is added
+                    // Navigation scaffolding to be added:
+                    // - NavHost with routes from ui.nav.Screens
+                    // - Start destination: Login
+                    // - After login, route to Directory or PendingGate based on Firestore user status
+                    // - Admin route to AdminPendingList if role=admin
+                    // Note: No functional code added here yet.
                 }
             }
         }
     }
 }
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-//instantiate
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AlumniCaseStudyTheme {
-        Greeting("Android")
-    }
-}
-
-// instantiate
