@@ -13,6 +13,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+app/google-services.json
+
 
 # Assert: The following rules ensure no Copilot, Detekt, VCS or other .idea XML junk are committed.
 # Ignore all .idea XML files by default
