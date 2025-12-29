@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "45014328994",
+    "project_id": "alumni-casestudy",
+    "storage_bucket": "alumni-casestudy.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:45014328994:android:56533d3f1778b5aec319fb",
+        "android_client_info": {
+          "package_name": "com.dx.alumnicasestudy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "45014328994-q5rdqttus12e4ih3d8qf5kvfrn2p518k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dx.alumnicasestudy",
+            "certificate_hash": "077f47ff6a8042a533eadcf3e620bc58b8aef764"
+          }
+        },
+        {
+          "client_id": "45014328994-4ld4n3m2stn649nmqrs96ulem9e4c34e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9iaMAGa_al2NNqAzIbO2K6Fgye4f2xnE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "45014328994-4ld4n3m2stn649nmqrs96ulem9e4c34e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
