@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.dx.alumnicasestudy.ui.theme.AlumniCaseStudyTheme
+import androidx.navigation.compose.rememberNavController
+import com.dx.alumnicasestudy.ui.nav.NavGraph
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,13 +18,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             AlumniCaseStudyTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) {
-                    // val innerPadding = it // Content padding; will be used when NavHost is added
-                    // Navigation scaffolding to be added:
-                    // - NavHost with routes from ui.nav.Screens
-                    // - Start destination: Login
-                    // - After login, route to Directory or PendingGate based on Firestore user status
-                    // - Admin route to AdminPendingList if role=admin
-                    // Note: No functional code added here yet.
+                    val navController = rememberNavController()
+                    NavGraph(navController = navController)
                 }
             }
         }

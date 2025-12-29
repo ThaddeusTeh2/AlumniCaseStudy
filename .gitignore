@@ -13,3 +13,32 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Assert: The following rules ensure no Copilot, Detekt, VCS or other .idea XML junk are committed.
+# Ignore all .idea XML files by default
+/.idea/**/*.xml
+
+# Explicitly ignore Copilot, Detekt, VCS related configs
+/.idea/copilot/
+/.idea/copilot/**
+/.idea/detekt.xml
+/.idea/**/detekt*.xml
+/.idea/vcs.xml
+/.idea/**/vcs.xml
+
+# Keep common IntelliJ IDEA folders ignored
+/.idea/inspectionProfiles/
+/.idea/sonarlint/
+/.idea/codeStyles/
+/.idea/shelf/
+/.idea/httpRequests/
+
+# Android Studio/Gradle caches and logs
+/.idea/system/
+/.idea/index/
+/.idea/plugins/
+/.idea/gradle.xml
+/.idea/compiler.xml
+/.idea/runConfigurations.xml
+
+# Optional: If you need to keep certain project-level settings, comment out specific lines above.
