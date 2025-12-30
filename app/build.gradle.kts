@@ -67,4 +67,10 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:34.7.0"))
     implementation("com.google.firebase:firebase-analytics")
+
+    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation("io.coil-kt.coil3:coil-compose:3.3.0")
+
+    implementation("androidx.compose.material:material-icons-core:1.7.8")
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 }

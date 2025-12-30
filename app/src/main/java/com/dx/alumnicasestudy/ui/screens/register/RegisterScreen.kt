@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -22,8 +25,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import coil.request.ImageRequest
+import coil3.compose.AsyncImage
+import com.dx.alumnicasestudy.R
 
 @Composable
 fun RegisterScreen() {
@@ -48,6 +58,10 @@ fun RegisterScreen() {
     var domain by remember { mutableStateOf("") }
     var currentCityCountry by remember { mutableStateOf("") }
     var contactPref by remember { mutableStateOf("") }
+    var shortBio by remember { mutableStateOf("")}
+    var photoUrl by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier.fillMaxSize().padding(32.dp),
@@ -131,7 +145,7 @@ fun RegisterScreen() {
             OutlinedTextField(
                 value = domain,
                 onValueChange = {domain = it},
-                label ={ Text("Domain") },
+                label ={ Text("Domain/Stack") },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(4.dp)
             )
@@ -151,6 +165,40 @@ fun RegisterScreen() {
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(4.dp)
             )
+            Spacer(Modifier.height(16.dp))
+            OutlinedTextField(
+                value = contactPref,
+                onValueChange = {contactPref = it},
+                label ={ Text("Preference") },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(4.dp)
+            )
+            Spacer(Modifier.height(16.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(
+                    onClick = {},
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Text("Upload Image here")
+                }
+                Spacer(Modifier.width(16.dp))
+                AsyncImage(
+                    model = ImageRequest.Builder(context)
+//                            .data()
+                        .crossfade(true)
+                        .build(),
+                    placeholder = painterResource(id = R.drawable.profile_avatar_placeholder),
+                    error = painterResource(id = R.drawable.profile_error_placeholder),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(CircleShape)
+                )
+            }
             Spacer(Modifier.height(16.dp))
             Button(
                 onClick = {},
