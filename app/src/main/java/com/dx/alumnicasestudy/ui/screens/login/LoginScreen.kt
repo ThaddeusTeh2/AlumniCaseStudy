@@ -24,45 +24,49 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
 
 @Composable
-fun LoginScreen() {
-    // UI fields exist; behavior to be wired:
-    // - Replace "Fullname" field labels with Email & Password
-    // - On Login button, call AuthRepository.login(email, password)
-    // - After successful login, fetch profile; if approved -> navigate to Directory; else -> PendingGate
-    // - "Sign up!" navigates to RegisterScreen
-
-    var name by remember { mutableStateOf("") }
-    var pass by remember { mutableStateOf("") }
+fun LoginScreen(navController: NavController = rememberNavController(), vm: HomeViewModel = HomeViewModel()) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier.fillMaxSize().padding(32.dp),
         contentAlignment = Alignment.Center
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text("Login", style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(
-                value= name,
-                onValueChange = { name = it },
-                label = { Text("Fullname") },
+                value= email,
+                onValueChange = { email = it },
+                label = { Text("Email") },
                 shape = RoundedCornerShape(4.dp)
             )
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(
-                value= pass,
-                onValueChange = { pass = it },
-                label = { Text("Fullname") },
+                value= password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
                 shape = RoundedCornerShape(4.dp),
                 visualTransformation = PasswordVisualTransformation()
             )
             Spacer(Modifier.height(16.dp))
             Button(
-                onClick = {},
-                modifier = Modifier.fillMaxWidth()
+                onClick = {
+                    vm.login(email, password) { route ->
+                        when (route) {
+                            "directory" -> navController.navigate("directory")
+                            "pending" -> navController.navigate("pending")
+                            else -> {}
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = true
             ) {
                 Text("Login")
             }
@@ -73,10 +77,8 @@ fun LoginScreen() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text("Don't have an account?")
-                TextButton(
-                    onClick = {}
-                ) {
-                    // Button text: "Sign up!"; should navigate to RegisterScreen
+                TextButton(onClick = { navController.navigate("register") }) {
+                    Text("Sign up!")
                 }
             }
         }

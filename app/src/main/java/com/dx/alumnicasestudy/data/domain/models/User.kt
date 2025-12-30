@@ -33,6 +33,14 @@ data class User(
     val created_at: Long = System.currentTimeMillis()
 ) {
     companion object {
+        // Role constants
+        const val ROLE_USER = "user"
+        const val ROLE_ADMIN = "admin"
+
+        // Status constants
+        const val STATUS_PENDING = "pending"
+        const val STATUS_APPROVED = "approved"
+
         // Helper factory to ensure lowercase and defaults are set consistently
         fun create(
             uid: String,

@@ -1,11 +1,7 @@
 package com.dx.alumnicasestudy.ui.screens.pending
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,6 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
 
 // Pending Gate screen scaffolding
 // Purpose:
@@ -21,7 +20,7 @@ import androidx.compose.ui.unit.sp
 // Note: Placeholder only.
 
 @Composable
-fun PendingGateScreen() {
+fun PendingGateScreen(navController: NavController = rememberNavController(), vm: HomeViewModel = HomeViewModel()) {
     Box(
         Modifier.fillMaxSize().padding(16.dp),
         contentAlignment = Alignment.Center
@@ -29,7 +28,11 @@ fun PendingGateScreen() {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text("Your account is pending admin approval.", fontSize = 24.sp, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(16.dp))
-            Text("All done. now you can close the app await for approval")
+            Text("You can close the app and await approval, or logout.")
+            Spacer(Modifier.height(16.dp))
+            Button(onClick = { vm.signOut { navController.navigate("login") } }) {
+                Text("Logout")
+            }
         }
     }
 }

@@ -16,19 +16,26 @@ import com.dx.alumnicasestudy.data.domain.models.User
 class FirestoreService {
     private val users = mutableMapOf<String /*uid*/, User>()
 
-    suspend fun createUser(user: User): Result<Unit> {
+    fun createUser(user: User): Result<Unit> {
         if (user.uid.isBlank()) return Result.failure(IllegalArgumentException("uid required"))
-        users[user.uid] = user
+        users[user.uid] = user.copy(name_lowercase = user.name.lowercase())
         return Result.success(Unit)
     }
 
-    suspend fun getUser(uid: String): User? = users[uid]
+    fun getUser(uid: String): User? = users[uid]
 
-    suspend fun queryApprovedUsers(): List<User> = users.values.filter { it.status == "approved" }.sortedBy { it.name_lowercase }
+    fun queryApprovedUsers(namePrefix: String? = null): List<User> {
+        val base = users.values.filter { it.status == "approved" }
+        val prefix = namePrefix?.trim()?.lowercase().orEmpty()
+        val filtered = if (prefix.isBlank()) base else base.filter { it.name_lowercase.startsWith(prefix) }
+        return filtered.sortedBy { it.name_lowercase }
+    }
 
-    suspend fun queryPendingUsers(): List<User> = users.values.filter { it.status == "pending" }.sortedBy { it.created_at }
+    fun queryPendingUsers(): List<User> = users.values
+        .filter { it.status == "pending" }
+        .sortedBy { it.created_at }
 
-    suspend fun approveUser(uid: String): Result<Unit> {
+    fun approveUser(uid: String): Result<Unit> {
         val user = users[uid] ?: return Result.failure(IllegalArgumentException("User not found"))
         users[uid] = user.copy(status = "approved")
         return Result.success(Unit)
