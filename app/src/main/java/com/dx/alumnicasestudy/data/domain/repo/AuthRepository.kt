@@ -58,8 +58,7 @@ class AuthRepository(
     }
 
     suspend fun login(email: String, password: String): Result<User> {
-        val uidResult = auth.login(email, password)
-        return uidResult.fold(
+        return auth.login(email, password).fold(
             onSuccess = { uid ->
                 val user = store.getUser(uid)
                 if (user != null) Result.success(user) else Result.failure(IllegalStateException("Profile not found"))
@@ -68,12 +67,13 @@ class AuthRepository(
         )
     }
 
-    suspend fun getCurrentUserProfile(): User? {
-        val uid = auth.currentUid() ?: return null
-        return store.getUser(uid)
-    }
+    suspend fun signOut() { auth.signOut() }
 
-    suspend fun approveUser(uid: String): Result<Unit> = store.approveUser(uid)
+    fun loadApprovedUsers(namePrefix: String? = null): List<User> = store.queryApprovedUsers(namePrefix)
+
+    fun loadPendingUsers(): List<User> = store.queryPendingUsers()
+
+    fun approveUser(uid: String): Result<Unit> = store.approveUser(uid)
 
     fun isAdmin(user: User?): Boolean = user?.role == "admin"
 }

@@ -4,24 +4,23 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.dx.alumnicasestudy.ui.screens.AdminPendingListScreen
-import com.dx.alumnicasestudy.ui.screens.DirectoryScreen
-import com.dx.alumnicasestudy.ui.screens.LoginScreen
-import com.dx.alumnicasestudy.ui.screens.PendingGateScreen
-import com.dx.alumnicasestudy.ui.screens.RegisterScreen
+import com.dx.alumnicasestudy.ui.screens.admin.AdminPendingListScreen
+import com.dx.alumnicasestudy.ui.screens.directory.DirectoryScreen
+import com.dx.alumnicasestudy.ui.screens.login.LoginScreen
+import com.dx.alumnicasestudy.ui.screens.pending.PendingGateScreen
+import com.dx.alumnicasestudy.ui.screens.register.RegisterScreen
 
+@Suppress("FunctionNaming")
 @Composable
 fun NavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        // For testing: set Home (Directory) as the default screen
-        startDestination = Screens.Directory.route,
+        startDestination = Screens.Login.route,
     ) {
-        composable(Screens.Login.route) { LoginScreen() }
-        composable(Screens.Register.route) { RegisterScreen() }
+        composable(Screens.Login.route) { LoginScreen(navController = navController) }
+        composable(Screens.Register.route) { RegisterScreen(navController = navController) }
         composable(Screens.Directory.route) { DirectoryScreen() }
-        composable(Screens.PendingGate.route) { PendingGateScreen() }
+        composable(Screens.PendingGate.route) { PendingGateScreen(navController = navController) }
         composable(Screens.AdminPendingList.route) { AdminPendingListScreen() }
     }
 }
-
