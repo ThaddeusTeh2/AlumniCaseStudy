@@ -1,7 +1,9 @@
 package com.dx.alumnicasestudy.ui.screens.register
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -43,7 +45,10 @@ fun RegisterScreen(navController: NavController = rememberNavController(), vm: H
             .padding(32.dp),
         contentAlignment = Alignment.Center
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier.verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text("Register", style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Fullname") }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(4.dp))
