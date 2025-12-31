@@ -45,8 +45,8 @@ class AuthRepository(
                     department = department,
                     jobTitle = jobTitle,
                     company = company,
-                    status = "pending",
-                    role = "user"
+                    status = User.STATUS_PENDING,
+                    role = User.ROLE_USER
                 )
                 store.createUser(user).fold(
                     onSuccess = { Result.success(user) },
@@ -69,11 +69,11 @@ class AuthRepository(
 
     suspend fun signOut() { auth.signOut() }
 
-    fun loadApprovedUsers(namePrefix: String? = null): List<User> = store.queryApprovedUsers(namePrefix)
+    suspend fun loadApprovedUsers(namePrefix: String? = null): List<User> = store.queryApprovedUsers(namePrefix)
 
-    fun loadPendingUsers(): List<User> = store.queryPendingUsers()
+    suspend fun loadPendingUsers(): List<User> = store.queryPendingUsers()
 
-    fun approveUser(uid: String): Result<Unit> = store.approveUser(uid)
+    suspend fun approveUser(uid: String): Result<Unit> = store.approveUser(uid)
 
-    fun isAdmin(user: User?): Boolean = user?.role == "admin"
+    fun isAdmin(user: User?): Boolean = user?.role == User.ROLE_ADMIN
 }

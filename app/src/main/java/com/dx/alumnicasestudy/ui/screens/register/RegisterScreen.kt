@@ -10,6 +10,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.dx.alumnicasestudy.ui.nav.Screens
 import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
 
 @Composable
@@ -35,7 +36,13 @@ fun RegisterScreen(navController: NavController = rememberNavController(), vm: H
         return null
     }
 
-    Box(modifier = Modifier.fillMaxSize().padding(32.dp), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.systemBars)
+            .padding(32.dp),
+        contentAlignment = Alignment.Center
+    ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text("Register", style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.height(16.dp))
@@ -73,8 +80,8 @@ fun RegisterScreen(navController: NavController = rememberNavController(), vm: H
                             department = department,
                             jobTitle = jobTitle,
                             company = company
-                        ) { route ->
-                            if (route == "pending") navController.navigate("pending")
+                        ) { _ ->
+                            navController.navigate(Screens.Home.route)
                         }
                     }
                 },
@@ -87,7 +94,7 @@ fun RegisterScreen(navController: NavController = rememberNavController(), vm: H
             Spacer(Modifier.height(16.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
                 Text("Have an account already?")
-                TextButton(onClick = { navController.navigate("login") }) { Text("Sign In!") }
+                TextButton(onClick = { navController.navigate(Screens.Login.route) }) { Text("Sign In!") }
             }
         }
     }
