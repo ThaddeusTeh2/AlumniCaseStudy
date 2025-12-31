@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.dx.alumnicasestudy.data.domain.models.User
 import com.dx.alumnicasestudy.di.RepositoryProvider
+import com.dx.alumnicasestudy.ui.nav.Screens
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,7 +31,8 @@ class HomeViewModel : ViewModel() {
                 onSuccess = { user: User ->
                     currentUser = user
                     isLoading = false
-                    val next = if (user.status == User.STATUS_APPROVED) "directory" else "pending"
+                    // Admin bypasses pending gate; everyone lands Home hub
+                    val next = Screens.Home.route
                     onNavigate(next)
                 },
                 onFailure = { err: Throwable ->
@@ -67,7 +69,8 @@ class HomeViewModel : ViewModel() {
                 onSuccess = { user: User ->
                     currentUser = user
                     isLoading = false
-                    onNavigate("pending")
+                    // After register, send to Home (will show PendingGate option from there if needed)
+                    onNavigate(Screens.Home.route)
                 },
                 onFailure = { err: Throwable ->
                     isLoading = false
@@ -78,21 +81,45 @@ class HomeViewModel : ViewModel() {
     }
 
     fun loadApproved(namePrefix: String? = null) {
+        isLoading = true
         scope.launch {
-            approvedUsers = repo.loadApprovedUsers(namePrefix)
+            try {
+                approvedUsers = repo.loadApprovedUsers(namePrefix)
+                isLoading = false
+            } catch (err: Throwable) {
+                isLoading = false
+                errorMessage = err.message ?: "Failed to load approved users"
+            }
         }
     }
 
     fun loadPending() {
+        isLoading = true
         scope.launch {
-            pendingUsers = repo.loadPendingUsers()
+            try {
+                pendingUsers = repo.loadPendingUsers()
+                isLoading = false
+            } catch (err: Throwable) {
+                isLoading = false
+                errorMessage = err.message ?: "Failed to load pending users"
+            }
         }
     }
 
     fun approveUser(uid: String) {
+        isLoading = true
         scope.launch {
-            repo.approveUser(uid)
-            loadPending()
+            val result = repo.approveUser(uid)
+            result.fold(
+                onSuccess = {
+                    loadPending()
+                    isLoading = false
+                },
+                onFailure = { err: Throwable ->
+                    isLoading = false
+                    errorMessage = err.message ?: "Failed to approve user"
+                }
+            )
         }
     }
 

@@ -11,6 +11,7 @@ package com.dx.alumnicasestudy.ui.nav
 sealed class Screens(val route: String) {
     object Login: Screens("login")
     object Register: Screens("register")
+    object Home: Screens("home")
     object Directory: Screens("directory")
     object PendingGate: Screens("pending")
     object AdminPendingList: Screens("admin_pending")

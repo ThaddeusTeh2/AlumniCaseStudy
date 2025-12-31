@@ -5,30 +5,8 @@
 
 package com.dx.alumnicasestudy.ui.screens
 
-// Directory/Home screen scaffolding
-// Purpose:
-// - Show list of approved alumni (name, graduation year, job title, company)
-// - Provide a simple search by name (case-insensitive using name_lowercase)
-// Composables to define:
-// - @Composable fun DirectoryScreen(...)
-// - @Composable fun PendingGateScreen() // shows "Pending admin approval"
-// - @Composable fun AdminPendingListScreen(...) // list of users with status=pending, approve action
-// ViewModel interactions:
-// - Fetch approved users
-// - Perform search queries
-// - Approve pending users (admin)
-// Navigation:
-// - Enforce closed network: route to PendingGate if status != approved
-
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -53,6 +31,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.dx.alumnicasestudy.ui.nav.Screens
 
 // UI-only placeholder for the Alumni Directory screen
 @OptIn(ExperimentalMaterial3Api::class)
@@ -268,6 +249,34 @@ fun AdminPendingListScreen() {
                 "No pending users (placeholder).",
                 style = MaterialTheme.typography.bodyMedium
             )
+        }
+    }
+}
+
+@Composable
+fun HomeScreen(navController: NavController = rememberNavController()) {
+    Surface(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.systemBars)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
+            Text("Home", style = MaterialTheme.typography.titleLarge)
+            Spacer(Modifier.height(24.dp))
+            Button(onClick = { navController.navigate(Screens.Directory.route) }, modifier = Modifier.fillMaxWidth()) {
+                Text("Go to Directory")
+            }
+            Spacer(Modifier.height(12.dp))
+            Button(onClick = { navController.navigate(Screens.PendingGate.route) }, modifier = Modifier.fillMaxWidth()) {
+                Text("Pending Gate")
+            }
+            Spacer(Modifier.height(12.dp))
+            Button(onClick = { navController.navigate(Screens.AdminPendingList.route) }, modifier = Modifier.fillMaxWidth()) {
+                Text("Admin - Pending Approvals")
+            }
         }
     }
 }

@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +28,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.dx.alumnicasestudy.ui.nav.Screens
 import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
 
 @Composable
@@ -34,7 +37,10 @@ fun LoginScreen(navController: NavController = rememberNavController(), vm: Home
     var password by remember { mutableStateOf("") }
 
     Box(
-        modifier = Modifier.fillMaxSize().padding(32.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(androidx.compose.foundation.layout.WindowInsets.systemBars)
+            .padding(32.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -58,11 +64,7 @@ fun LoginScreen(navController: NavController = rememberNavController(), vm: Home
             Button(
                 onClick = {
                     vm.login(email, password) { route ->
-                        when (route) {
-                            "directory" -> navController.navigate("directory")
-                            "pending" -> navController.navigate("pending")
-                            else -> {}
-                        }
+                        navController.navigate(Screens.Home.route)
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -77,7 +79,7 @@ fun LoginScreen(navController: NavController = rememberNavController(), vm: Home
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text("Don't have an account?")
-                TextButton(onClick = { navController.navigate("register") }) {
+                TextButton(onClick = { navController.navigate(Screens.Register.route) }) {
                     Text("Sign up!")
                 }
             }

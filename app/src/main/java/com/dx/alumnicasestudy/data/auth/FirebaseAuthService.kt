@@ -1,51 +1,57 @@
 package com.dx.alumnicasestudy.data.auth
 
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.suspendCancellableCoroutine
+import com.google.android.gms.tasks.Task
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class FirebaseAuthService {
-    // Placeholder service for Firebase Authentication interactions
-    // Responsibilities:
-    // - Initialize Firebase Auth
-    // - Email/password sign-up
-    // - Email/password login
-    // - Sign-out
-    // - Get current user UID
-    // - Observe auth state (optional)
-    // No concrete implementation; this is structural scaffolding.
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    // Assert: Below is a lightweight, dependency-free implementation that mimics FirebaseAuth using in-memory storage.
-
-    private val usersByEmail = mutableMapOf<String, Pair<String /*uid*/, String /*password*/>>()
-    private val _authState = MutableStateFlow<String?>(null) // current uid or null
-
+    private val _authState = MutableStateFlow<String?>(auth.currentUser?.uid)
     val authState: StateFlow<String?> = _authState.asStateFlow()
 
-    suspend fun register(email: String, password: String): Result<String /*uid*/> {
+    suspend fun register(email: String, password: String): Result<String> {
         if (email.isBlank() || password.isBlank()) return Result.failure(IllegalArgumentException("Email and password required"))
-        if (usersByEmail.containsKey(email)) return Result.failure(IllegalStateException("Email already registered"))
-        val uid = generateUid(email)
-        usersByEmail[email] = uid to password
-        _authState.value = uid
-        return Result.success(uid)
+        return try {
+            val result = auth.createUserWithEmailAndPassword(email, password).await()
+            val uid = result.user?.uid ?: return Result.failure(IllegalStateException("No UID returned"))
+            _authState.value = uid
+            Result.success(uid)
+        } catch (t: Throwable) {
+            Result.failure(t)
+        }
     }
 
-    suspend fun login(email: String, password: String): Result<String /*uid*/> {
-        val record = usersByEmail[email] ?: return Result.failure(IllegalArgumentException("No account for email"))
-        if (record.second != password) return Result.failure(IllegalArgumentException("Invalid credentials"))
-        _authState.value = record.first
-        return Result.success(record.first)
+    suspend fun login(email: String, password: String): Result<String> {
+        return try {
+            val result = auth.signInWithEmailAndPassword(email, password).await()
+            val uid = result.user?.uid ?: return Result.failure(IllegalStateException("No UID returned"))
+            _authState.value = uid
+            Result.success(uid)
+        } catch (t: Throwable) {
+            Result.failure(t)
+        }
     }
 
     suspend fun signOut() {
+        auth.signOut()
         _authState.value = null
     }
 
-    fun currentUid(): String? = _authState.value
+    fun currentUid(): String? = auth.currentUser?.uid
+}
 
-    private fun generateUid(seed: String): String {
-        // Deterministic-ish uid for simplicity; in real Firebase, this is provided.
-        return "uid_" + seed.lowercase().hashCode().toString()
+private suspend fun <T> Task<T>.await(): T = suspendCancellableCoroutine { cont ->
+    addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+            cont.resume(task.result as T)
+        } else {
+            cont.resumeWithException(task.exception ?: RuntimeException("Task failed"))
+        }
     }
 }

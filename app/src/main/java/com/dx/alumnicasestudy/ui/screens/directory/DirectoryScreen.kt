@@ -11,15 +11,32 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.dx.alumnicasestudy.ui.nav.Screens
 import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DirectoryScreen(vm: HomeViewModel = HomeViewModel()) {
+fun DirectoryScreen(navController: NavController = rememberNavController(), vm: HomeViewModel = HomeViewModel()) {
     var searchText by remember { mutableStateOf("") }
 
     LaunchedEffect(searchText) { vm.loadApproved(searchText) }
 
-    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .windowInsetsPadding(WindowInsets.systemBars)
+    ) {
+        TopAppBar(
+            title = { Text("Alumni Directory") },
+            actions = {
+                TextButton(onClick = { navController.navigate(Screens.Home.route) }) {
+                    Text("Home")
+                }
+            }
+        )
         Row(modifier = Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             OutlinedTextField(
                 value = searchText,
