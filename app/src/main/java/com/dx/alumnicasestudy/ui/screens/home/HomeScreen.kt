@@ -3,7 +3,7 @@
     "MaxLineLength",
 )
 
-package com.dx.alumnicasestudy.ui.screens
+package com.dx.alumnicasestudy.ui.screens.home
 
 // Directory/Home screen scaffolding
 // Purpose:
@@ -24,6 +24,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,11 +32,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -62,6 +67,8 @@ fun DirectoryScreen(
 ) {
     // UI-only placeholder: local state for search box, no filtering yet
     var query by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
+    var selectedOption by remember { mutableStateOf("Tech Stack Ascend") }
 
     val sampleAlumni = listOf(
         AlumniRowData("John Tan", "Class of 2021", "Software Engineer", "Grab"),
@@ -83,13 +90,97 @@ fun DirectoryScreen(
 
             Spacer(Modifier.height(12.dp))
 
-            OutlinedTextField(
-                value = query,
-                onValueChange = { query = it },
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Search by name") },
-                singleLine = true
-            )
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedTextField(
+                    value = query,
+                    onValueChange = { query = it },
+                    modifier = Modifier.weight(1f),
+                    placeholder = { Text("Search by name") },
+                    singleLine = true
+                )
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { expanded = !expanded }
+                ) {
+                    OutlinedTextField(
+                        value = selectedOption,
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("User Filter") },
+                        trailingIcon = {
+                            Icon(
+                                Icons.Default.ArrowDropDown,
+                                "",
+                                modifier = Modifier.clickable { expanded = true }
+                            )
+                        },
+                        modifier = Modifier.menuAnchor()
+                    )
+                    ExposedDropdownMenuBox(
+                        expanded = expanded,
+                        onExpandedChange = { expanded = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Tech Stack Ascend") },
+                            onClick = {
+                                selectedOption = "Tech Stack Ascend"
+                                expanded = false
+//                                viewModel.state.value.orderBy = OrderBy.TechStack(OrderType.Ascending)
+//                                viewModel.getUsers()
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Tech Stack Descend") },
+                            onClick = {
+                                selectedOption = "Tech Stack Descend"
+                                expanded = false
+//                                viewModel.state.value.orderBy = OrderBy.TechStack(OrderType.Descending)
+//                                viewModel.getUsers()
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Location Ascend") },
+                            onClick = {
+                                selectedOption = "Location Ascend"
+                                expanded = false
+//                                viewModel.state.value.orderBy = OrderBy.Location(OrderType.Ascending)
+//                                viewModel.getUsers()
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Location Descend") },
+                            onClick = {
+                                selectedOption = "Location Descend"
+                                expanded = false
+//                                viewModel.state.value.orderBy = OrderBy.Location(OrderType.Descending)
+//                                viewModel.getUsers()
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Graduation Ascend") },
+                            onClick = {
+                                selectedOption = "Graduation Ascend"
+                                expanded = false
+//                                viewModel.state.value.orderBy = OrderBy.Graduation(OrderType.Ascending)
+//                                viewModel.getUsers()
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Graduation Descend") },
+                            onClick = {
+                                selectedOption = "Graduation Descend"
+                                expanded = false
+//                                viewModel.state.value.orderBy = OrderBy.Graduation(OrderType.Descending)
+//                                viewModel.getUsers()
+                            }
+                        )
+                    }
+                }
+            }
 
             Spacer(Modifier.height(12.dp))
 
@@ -159,7 +250,7 @@ private fun RowLike(
     left: @Composable () -> Unit,
     right: @Composable () -> Unit,
 ) {
-    androidx.compose.foundation.layout.Row(
+    Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
