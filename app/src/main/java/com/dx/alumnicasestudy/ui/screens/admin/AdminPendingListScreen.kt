@@ -14,7 +14,7 @@ import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
 fun AdminPendingListScreen(vm: HomeViewModel = HomeViewModel()) {
     LaunchedEffect(Unit) { vm.loadPending() }
 
-    Column(Modifier.fillMaxSize().padding(16.dp)) {
+    Column(Modifier.fillMaxSize().statusBarsPadding().padding(16.dp)) {
         Row {
             Text("Pending Approvals", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
         }
