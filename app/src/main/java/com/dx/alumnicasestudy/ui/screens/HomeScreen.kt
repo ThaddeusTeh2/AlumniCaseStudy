@@ -3,44 +3,17 @@
     "MaxLineLength",
 )
 
-package com.dx.alumnicasestudy.ui.screens.home
-
-// Directory/Home screen scaffolding
-// Purpose:
-// - Show list of approved alumni (name, graduation year, job title, company)
-// - Provide a simple search by name (case-insensitive using name_lowercase)
-// Composables to define:
-// - @Composable fun DirectoryScreen(...)
-// - @Composable fun PendingGateScreen() // shows "Pending admin approval"
-// - @Composable fun AdminPendingListScreen(...) // list of users with status=pending, approve action
-// ViewModel interactions:
-// - Fetch approved users
-// - Perform search queries
-// - Approve pending users (admin)
-// Navigation:
-// - Enforce closed network: route to PendingGate if status != approved
+package com.dx.alumnicasestudy.ui.screens
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -58,6 +31,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.dx.alumnicasestudy.ui.nav.Screens
 
 // UI-only placeholder for the Alumni Directory screen
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,8 +43,6 @@ fun DirectoryScreen(
 ) {
     // UI-only placeholder: local state for search box, no filtering yet
     var query by remember { mutableStateOf("") }
-    var expanded by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf("Tech Stack Ascend") }
 
     val sampleAlumni = listOf(
         AlumniRowData("John Tan", "Class of 2021", "Software Engineer", "Grab"),
@@ -90,97 +64,13 @@ fun DirectoryScreen(
 
             Spacer(Modifier.height(12.dp))
 
-            Row(
+            OutlinedTextField(
+                value = query,
+                onValueChange = { query = it },
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                OutlinedTextField(
-                    value = query,
-                    onValueChange = { query = it },
-                    modifier = Modifier.weight(1f),
-                    placeholder = { Text("Search by name") },
-                    singleLine = true
-                )
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = { expanded = !expanded }
-                ) {
-                    OutlinedTextField(
-                        value = selectedOption,
-                        onValueChange = {},
-                        readOnly = true,
-                        label = { Text("User Filter") },
-                        trailingIcon = {
-                            Icon(
-                                Icons.Default.ArrowDropDown,
-                                "",
-                                modifier = Modifier.clickable { expanded = true }
-                            )
-                        },
-                        modifier = Modifier.menuAnchor()
-                    )
-                    ExposedDropdownMenuBox(
-                        expanded = expanded,
-                        onExpandedChange = { expanded = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text("Tech Stack Ascend") },
-                            onClick = {
-                                selectedOption = "Tech Stack Ascend"
-                                expanded = false
-//                                viewModel.state.value.orderBy = OrderBy.TechStack(OrderType.Ascending)
-//                                viewModel.getUsers()
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Tech Stack Descend") },
-                            onClick = {
-                                selectedOption = "Tech Stack Descend"
-                                expanded = false
-//                                viewModel.state.value.orderBy = OrderBy.TechStack(OrderType.Descending)
-//                                viewModel.getUsers()
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Location Ascend") },
-                            onClick = {
-                                selectedOption = "Location Ascend"
-                                expanded = false
-//                                viewModel.state.value.orderBy = OrderBy.Location(OrderType.Ascending)
-//                                viewModel.getUsers()
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Location Descend") },
-                            onClick = {
-                                selectedOption = "Location Descend"
-                                expanded = false
-//                                viewModel.state.value.orderBy = OrderBy.Location(OrderType.Descending)
-//                                viewModel.getUsers()
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Graduation Ascend") },
-                            onClick = {
-                                selectedOption = "Graduation Ascend"
-                                expanded = false
-//                                viewModel.state.value.orderBy = OrderBy.Graduation(OrderType.Ascending)
-//                                viewModel.getUsers()
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Graduation Descend") },
-                            onClick = {
-                                selectedOption = "Graduation Descend"
-                                expanded = false
-//                                viewModel.state.value.orderBy = OrderBy.Graduation(OrderType.Descending)
-//                                viewModel.getUsers()
-                            }
-                        )
-                    }
-                }
-            }
+                placeholder = { Text("Search by name") },
+                singleLine = true
+            )
 
             Spacer(Modifier.height(12.dp))
 
@@ -250,7 +140,7 @@ private fun RowLike(
     left: @Composable () -> Unit,
     right: @Composable () -> Unit,
 ) {
-    Row(
+    androidx.compose.foundation.layout.Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -359,6 +249,34 @@ fun AdminPendingListScreen() {
                 "No pending users (placeholder).",
                 style = MaterialTheme.typography.bodyMedium
             )
+        }
+    }
+}
+
+@Composable
+fun HomeScreen(navController: NavController = rememberNavController()) {
+    Surface(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.systemBars)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
+            Text("Home", style = MaterialTheme.typography.titleLarge)
+            Spacer(Modifier.height(24.dp))
+            Button(onClick = { navController.navigate(Screens.Directory.route) }, modifier = Modifier.fillMaxWidth()) {
+                Text("Go to Directory")
+            }
+            Spacer(Modifier.height(12.dp))
+            Button(onClick = { navController.navigate(Screens.PendingGate.route) }, modifier = Modifier.fillMaxWidth()) {
+                Text("Pending Gate")
+            }
+            Spacer(Modifier.height(12.dp))
+            Button(onClick = { navController.navigate(Screens.AdminPendingList.route) }, modifier = Modifier.fillMaxWidth()) {
+                Text("Admin - Pending Approvals")
+            }
         }
     }
 }
