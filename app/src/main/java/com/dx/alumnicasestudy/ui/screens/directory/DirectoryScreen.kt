@@ -20,7 +20,7 @@ import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DirectoryScreen(navController: NavController = rememberNavController(), vm: HomeViewModel = HomeViewModel()) {
+fun DirectoryScreen(navController: NavController = rememberNavController(), vm: HomeViewModel) {
     var searchText by remember { mutableStateOf("") }
 
     LaunchedEffect(searchText) { vm.loadApproved(searchText) }

@@ -1,6 +1,6 @@
 # AlumniCaseStudy – MVP Todo Checklist (Sanity-checked)
 
-Last checked: Dec 31
+Last checked: Jan 5
 
 High-level
 - Goal: Closed alumni directory (Auth + Firestore). Pending users see gate; approved users see directory; admin approves.
@@ -16,16 +16,17 @@ Repositories & Build
 
 Navigation
 - [Done] `ui/nav/navGraph.kt` sets `startDestination = Login`.
-- [Pending] Use a shared `HomeViewModel` scoped to NavHost (avoid new VM per screen).
+- [Done] Use a shared `HomeViewModel` scoped to NavHost (avoid new VM per screen).
+- [Done] MainActivity renders `NavGraph` with a `NavController` and the shared `HomeViewModel`.
 
 UI Screens (wiring)
 - Login
   - [Done] Labels: Email/Password.
-  - [Done] Call repo.login; route to Directory or PendingGate.
+  - [Done] Call repo.login; route by role/status: admin → Home; approved → Directory; pending → PendingGate.
   - [Pending] Show loading/error feedback (minimal present, polish later).
 - Register
   - [Done] MVP fields only: name, email, password(+confirm), graduation_year, department, job_title, company.
-  - [Done] Simple validation; call repo.register; route to PendingGate.
+  - [Done] Simple validation; call repo.register; route by status (currently pending → PendingGate).
   - [Pending] UX polish (errors/snackbar, disabled states, keyboard types).
 - PendingGate
   - [Done] Add Logout button → back to Login.
@@ -34,15 +35,15 @@ UI Screens (wiring)
   - [Done] List approved users; search by name prefix.
   - [Pending] Navigate to read-only Profile on item tap.
   - [Pending] Empty state / loading feedback.
-- AdminPendingList
+- Admin Approvals (formerly "AdminPendingList")
   - [Done] List pending users; Approve action; refresh list.
-  - [Pending] Gate route by role == admin (app-side check once real auth/profile wired).
+  - [Done] Gate route by role == admin (app-side check).
 - Profile (read-only)
   - [Pending] Minimal screen to show name, year, job, company, email.
 
 ViewModel
 - [Done] `HomeViewModel` implemented: login, register, loadApproved, loadPending, approveUser, signOut.
-- [Pending] Scope a single `HomeViewModel` to the NavGraph for shared state.
+- [Done] Scoped a single `HomeViewModel` to the NavGraph for shared state.
 - [Pending] Add basic loading/empty state flows for lists.
 
 Data Layer
@@ -68,12 +69,12 @@ Firebase Console
 
 Acceptance (MVP)
 - [Partial] Register creates Auth user + Firestore `users/{uid}` with status=pending, role=user. (App code ready; requires Auth Email/Password enabled and Firestore DB + rules.)
-- [Partial] Login routing: approved → Directory; pending → PendingGate. (App code ready; depends on seeded data and ViewModel wiring.)
+- [Done] Login routing: admin → Home; approved → Directory; pending → PendingGate. (App code wired; depends on seeded data to observe.)
 - [Partial] Directory lists approved users and supports case-insensitive prefix search. (Implemented in service; UI already lists.)
 - [Partial] Admin can approve pending users in-app. (Service method implemented; screen hooks present.)
 
 Quick dev notes
 - Build warning cleanup: move hardcoded deps to version catalog; update jvmTarget DSL.
 - Naming consistency: if you refactor `User` to camelCase, update all UI references (e.g., `graduationYear`, `jobTitle`) and keep Firestore keys snake_case in maps.
-- Shared ViewModel: create `@Composable fun AppNavHost()` that provides a single `HomeViewModel` to all destinations.
-- Real Firebase swap-in: Auth (Email/Password) and Firestore reads/writes are now backed by SDK; method shapes kept the same.
+- Shared ViewModel + NavHost: implemented in `MainActivity` and `ui/nav/navGraph.kt`.
+- Route naming: admin review route renamed to `Admin Approvals` (`admin_approvals`) to avoid confusion.

@@ -22,6 +22,15 @@ class HomeViewModel : ViewModel() {
     var approvedUsers by mutableStateOf<List<User>>(emptyList())
     var pendingUsers by mutableStateOf<List<User>>(emptyList())
 
+    private fun routeFor(user: User): String {
+        // Admins land on Home hub for now
+        return when {
+            user.role == User.ROLE_ADMIN -> Screens.Home.route
+            user.status == User.STATUS_APPROVED -> Screens.Directory.route
+            else -> Screens.PendingGate.route
+        }
+    }
+
     fun login(email: String, password: String, onNavigate: (route: String) -> Unit) {
         isLoading = true
         errorMessage = null
@@ -31,9 +40,7 @@ class HomeViewModel : ViewModel() {
                 onSuccess = { user: User ->
                     currentUser = user
                     isLoading = false
-                    // Admin bypasses pending gate; everyone lands Home hub
-                    val next = Screens.Home.route
-                    onNavigate(next)
+                    onNavigate(routeFor(user))
                 },
                 onFailure = { err: Throwable ->
                     isLoading = false
@@ -69,8 +76,7 @@ class HomeViewModel : ViewModel() {
                 onSuccess = { user: User ->
                     currentUser = user
                     isLoading = false
-                    // After register, send to Home (will show PendingGate option from there if needed)
-                    onNavigate(Screens.Home.route)
+                    onNavigate(routeFor(user))
                 },
                 onFailure = { err: Throwable ->
                     isLoading = false
@@ -127,7 +133,7 @@ class HomeViewModel : ViewModel() {
         scope.launch {
             repo.signOut()
             currentUser = null
-            onNavigate("login")
+            onNavigate(Screens.Login.route)
         }
     }
 }
