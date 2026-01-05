@@ -9,6 +9,7 @@ import com.dx.alumnicasestudy.ui.screens.admin.AdminPendingListScreen
 import com.dx.alumnicasestudy.ui.screens.directory.DirectoryScreen
 import com.dx.alumnicasestudy.ui.screens.login.LoginScreen
 import com.dx.alumnicasestudy.ui.screens.pending.PendingGateScreen
+import com.dx.alumnicasestudy.ui.screens.profile.ProfileScreen
 import com.dx.alumnicasestudy.ui.screens.register.RegisterScreen
 import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
 
@@ -25,5 +26,6 @@ fun NavGraph(navController: NavHostController, vm: HomeViewModel) {
         composable(Screens.Directory.route) { DirectoryScreen(navController = navController, vm = vm) }
         composable(Screens.PendingGate.route) { PendingGateScreen(navController = navController, vm = vm) }
         composable(Screens.AdminApprovals.route) { AdminPendingListScreen(vm = vm) }
+        composable(Screens.Profile.route) { ProfileScreen(navController = navController, vm= vm) }
     }
 }

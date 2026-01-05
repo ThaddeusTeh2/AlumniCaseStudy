@@ -15,6 +15,7 @@ sealed class Screens(val route: String) {
     object Directory: Screens("directory")
     object PendingGate: Screens("pending")
     object AdminApprovals: Screens("admin_approvals")
+    object Profile: Screens("profile")
 }
 
 // Note: Actual NavHost setup will be done in MainActivity with Compose Navigation.
