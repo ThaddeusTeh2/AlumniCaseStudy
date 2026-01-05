@@ -10,19 +10,20 @@ import com.dx.alumnicasestudy.ui.screens.directory.DirectoryScreen
 import com.dx.alumnicasestudy.ui.screens.login.LoginScreen
 import com.dx.alumnicasestudy.ui.screens.pending.PendingGateScreen
 import com.dx.alumnicasestudy.ui.screens.register.RegisterScreen
+import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
 
 @Suppress("FunctionNaming")
 @Composable
-fun NavGraph(navController: NavHostController) {
+fun NavGraph(navController: NavHostController, vm: HomeViewModel) {
     NavHost(
         navController = navController,
         startDestination = Screens.Login.route,
     ) {
-        composable(Screens.Login.route) { LoginScreen(navController = navController) }
-        composable(Screens.Register.route) { RegisterScreen(navController = navController) }
+        composable(Screens.Login.route) { LoginScreen(navController = navController, vm = vm) }
+        composable(Screens.Register.route) { RegisterScreen(navController = navController, vm = vm) }
         composable(Screens.Home.route) { HomeScreen(navController = navController) }
-        composable(Screens.Directory.route) { DirectoryScreen(navController = navController) }
-        composable(Screens.PendingGate.route) { PendingGateScreen(navController = navController) }
-        composable(Screens.AdminPendingList.route) { AdminPendingListScreen() }
+        composable(Screens.Directory.route) { DirectoryScreen(navController = navController, vm = vm) }
+        composable(Screens.PendingGate.route) { PendingGateScreen(navController = navController, vm = vm) }
+        composable(Screens.AdminApprovals.route) { AdminPendingListScreen(vm = vm) }
     }
 }

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -140,7 +139,7 @@ private fun RowLike(
     left: @Composable () -> Unit,
     right: @Composable () -> Unit,
 ) {
-    androidx.compose.foundation.layout.Row(
+    Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -274,7 +273,7 @@ fun HomeScreen(navController: NavController = rememberNavController()) {
                 Text("Pending Gate")
             }
             Spacer(Modifier.height(12.dp))
-            Button(onClick = { navController.navigate(Screens.AdminPendingList.route) }, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = { navController.navigate(Screens.AdminApprovals.route) }, modifier = Modifier.fillMaxWidth()) {
                 Text("Admin - Pending Approvals")
             }
         }

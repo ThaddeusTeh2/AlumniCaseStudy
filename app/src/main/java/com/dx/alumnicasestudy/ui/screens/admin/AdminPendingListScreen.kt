@@ -11,14 +11,22 @@ import androidx.compose.ui.unit.dp
 import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
 
 @Composable
-fun AdminPendingListScreen(vm: HomeViewModel = HomeViewModel()) {
-    LaunchedEffect(Unit) { vm.loadPending() }
+fun AdminPendingListScreen(vm: HomeViewModel) {
+    val isAdmin = vm.currentUser?.isAdmin ?: (vm.currentUser?.role == "admin")
+
+    LaunchedEffect(Unit) {
+        if (isAdmin) vm.loadPending()
+    }
 
     Column(Modifier.fillMaxSize().statusBarsPadding().padding(16.dp)) {
         Row {
-            Text("Pending Approvals", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+            Text("Admin - Pending Approvals", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
         }
         Spacer(Modifier.height(16.dp))
+        if (!isAdmin) {
+            Text("You do not have permission to view this page.")
+            return@Column
+        }
         LazyColumn(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(vm.pendingUsers) { user ->
                 Card {

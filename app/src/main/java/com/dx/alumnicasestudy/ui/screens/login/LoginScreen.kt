@@ -32,7 +32,7 @@ import com.dx.alumnicasestudy.ui.nav.Screens
 import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
 
 @Composable
-fun LoginScreen(navController: NavController = rememberNavController(), vm: HomeViewModel = HomeViewModel()) {
+fun LoginScreen(navController: NavController = rememberNavController(), vm: HomeViewModel) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -64,7 +64,7 @@ fun LoginScreen(navController: NavController = rememberNavController(), vm: Home
             Button(
                 onClick = {
                     vm.login(email, password) { route ->
-                        navController.navigate(Screens.Home.route)
+                        navController.navigate(route)
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),

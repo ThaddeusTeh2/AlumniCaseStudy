@@ -16,7 +16,7 @@ import com.dx.alumnicasestudy.ui.nav.Screens
 import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
 
 @Composable
-fun RegisterScreen(navController: NavController = rememberNavController(), vm: HomeViewModel = HomeViewModel()) {
+fun RegisterScreen(navController: NavController = rememberNavController(), vm: HomeViewModel) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -85,8 +85,8 @@ fun RegisterScreen(navController: NavController = rememberNavController(), vm: H
                             department = department,
                             jobTitle = jobTitle,
                             company = company
-                        ) { _ ->
-                            navController.navigate(Screens.Home.route)
+                        ) { route ->
+                            navController.navigate(route)
                         }
                     }
                 },

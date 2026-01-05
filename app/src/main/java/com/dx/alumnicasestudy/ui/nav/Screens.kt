@@ -6,7 +6,7 @@ package com.dx.alumnicasestudy.ui.nav
 // - Register
 // - Directory (Home)
 // - PendingGate
-// - AdminPendingList
+// - AdminApprovals (admin reviews and approves users)
 
 sealed class Screens(val route: String) {
     object Login: Screens("login")
@@ -14,7 +14,7 @@ sealed class Screens(val route: String) {
     object Home: Screens("home")
     object Directory: Screens("directory")
     object PendingGate: Screens("pending")
-    object AdminPendingList: Screens("admin_pending")
+    object AdminApprovals: Screens("admin_approvals")
 }
 
 // Note: Actual NavHost setup will be done in MainActivity with Compose Navigation.

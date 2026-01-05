@@ -21,7 +21,7 @@ import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
 // Note: Placeholder only.
 
 @Composable
-fun PendingGateScreen(navController: NavController = rememberNavController(), vm: HomeViewModel = HomeViewModel()) {
+fun PendingGateScreen(navController: NavController = rememberNavController(), vm: HomeViewModel) {
     Box(
         Modifier
             .fillMaxSize()
