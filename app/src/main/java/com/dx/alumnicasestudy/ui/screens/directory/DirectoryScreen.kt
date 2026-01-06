@@ -3,10 +3,12 @@ package com.dx.alumnicasestudy.ui.screens.directory
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -22,6 +24,8 @@ import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
 @Composable
 fun DirectoryScreen(navController: NavController = rememberNavController(), vm: HomeViewModel) {
     var searchText by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
+    var selectedOption by remember { mutableStateOf("Name Ascend") }
 
     LaunchedEffect(searchText) { vm.loadApproved(searchText) }
 
@@ -41,7 +45,7 @@ fun DirectoryScreen(navController: NavController = rememberNavController(), vm: 
                 }
             }
         )
-        Row(modifier = Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
             OutlinedTextField(
                 value = searchText,
                 onValueChange = { searchText = it },
@@ -49,6 +53,74 @@ fun DirectoryScreen(navController: NavController = rememberNavController(), vm: 
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.weight(1f)
             )
+            OutlinedTextField(
+                value = selectedOption,
+                onValueChange = {},
+                readOnly = true,
+                label = { Text("Alumni filter") },
+                trailingIcon = {
+                    Icon(
+                        Icons.Default.ArrowDropDown,
+                        "",
+                        modifier = Modifier.clickable{ expanded = true }
+                    )
+                },
+                modifier = Modifier.clickable{ expanded = true }
+            )
+            DropdownMenu(
+                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                DropdownMenuItem(
+                    text = { Text("TechStack Ascend") },
+                    onClick = {
+                        selectedOption = "TechStack Ascend"
+                        expanded = false
+                        vm.loadApproved()
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text("Location Ascend") },
+                    onClick = {
+                        selectedOption = "Location Ascend"
+                        expanded = false
+                        vm.loadApproved()
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text("Graduation Ascend") },
+                    onClick = {
+                        selectedOption = "Graduation Ascend"
+                        expanded = false
+                        vm.loadApproved()
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text("TechStack Descend") },
+                    onClick = {
+                        selectedOption = "TechStack Descend"
+                        expanded = false
+                        vm.loadApproved()
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text("Location Descend") },
+                    onClick = {
+                        selectedOption = "Location Descend"
+                        expanded = false
+                        vm.loadApproved()
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text("Graduation Descend") },
+                    onClick = {
+                        selectedOption = "Graduation Descend"
+                        expanded = false
+                        vm.loadApproved()
+                    }
+                )
+            }
         }
         LazyColumn(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(16.dp)) {
             items(vm.approvedUsers) { user ->

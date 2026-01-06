@@ -4,11 +4,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.dx.alumnicasestudy.core.Resource
 import com.dx.alumnicasestudy.data.domain.models.User
+import com.dx.alumnicasestudy.data.domain.util.OrderBy
+import com.dx.alumnicasestudy.data.domain.util.OrderType
 import com.dx.alumnicasestudy.di.RepositoryProvider
 import com.dx.alumnicasestudy.ui.nav.Screens
+import com.dx.alumnicasestudy.ui.screens.home.HomeUiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
@@ -137,3 +142,26 @@ class HomeViewModel : ViewModel() {
         }
     }
 }
+
+//data class HomeUiState(
+//    val isLoading: Boolean = false,
+//    val coins: List<User> = emptyList(),
+//    var orderBy: OrderBy = OrderBy.TechStack(OrderType.Ascending),
+//    val error: String? = ""
+//)
+
+//fun getUsers() {
+//    getUsersUseCase(state.value.orderBy).onEach { result ->
+//        when(result) {
+//            is Resource.Loading -> {
+//                _state.value = HomeUiState(true)
+//            }
+//            is Resource.Success -> {
+//                _state.value = HomeUiState(false, users = result.data ?: emptyList())
+//            }
+//            is Resource.Error -> {
+//                _state.value = HomeUiState(false, error = result.msg)
+//            }
+//        }
+//    }
+//} (Sorting function set but not implement yet due to avoiding merge conflict)
