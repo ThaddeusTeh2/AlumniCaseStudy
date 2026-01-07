@@ -32,7 +32,7 @@ class HomeViewModel @Inject constructor(
                     _state.value = HomeUiState(true)
                 }
                 is Resource.Success -> {
-//                    _state.value = HomeUiState(false, users = result.data ?: emptyList())
+                    _state.value = HomeUiState(false, users = result.data ?: emptyList())
                 }
                 is Resource.Error -> {
                     _state.value = HomeUiState(false, error = result.msg)
