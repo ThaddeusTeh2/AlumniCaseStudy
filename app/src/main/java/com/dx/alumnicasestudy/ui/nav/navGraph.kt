@@ -12,7 +12,6 @@ import com.dx.alumnicasestudy.ui.screens.directory.DirectoryScreen
 import com.dx.alumnicasestudy.ui.screens.login.LoginScreen
 import com.dx.alumnicasestudy.ui.screens.pending.PendingGateScreen
 import com.dx.alumnicasestudy.ui.screens.profile.ProfileScreen
-import com.dx.alumnicasestudy.ui.screens.profile.ProfileViewModel
 import com.dx.alumnicasestudy.ui.screens.register.RegisterScreen
 import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
 

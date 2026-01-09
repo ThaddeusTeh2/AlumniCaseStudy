@@ -1,21 +1,8 @@
 package com.dx.alumnicasestudy.ui.screens.profile
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
@@ -42,12 +29,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import coil3.compose.AsyncImage
 import com.dx.alumnicasestudy.R
 import com.dx.alumnicasestudy.data.domain.models.User
+import com.dx.alumnicasestudy.di.RepositoryProvider
+import com.google.firebase.auth.FirebaseAuth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 
 // Profile screen scaffolding (read-only)
 // Purpose:
@@ -58,7 +49,7 @@ import com.dx.alumnicasestudy.data.domain.models.User
 @Composable
 fun ProfileScreen(
     navController: NavController,
-    vm: ProfileViewModel = hiltViewModel(),
+    vm: ProfileViewModel = viewModel(factory = ProfileViewModelFactory()),
     userId: String?
 ) {
     val context = LocalContext.current
@@ -80,60 +71,27 @@ fun ProfileScreen(
             editMode = editMode,
             onEditClick = { editMode = !editMode }
         )
-        Box(
-            Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+        // Single scroll container with bounded constraints
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start
         ) {
-            if(editMode) {
-                Column(
-                    Modifier.fillMaxWidth(),
-                    ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text("email")
-                        Spacer(Modifier.width(8.dp))
-                        IconButton(
-                            onClick = {}
-                        ) {
-                            Icon(Icons.Default.ToggleOff, "")
+            // Content item(s)
+            item {
+                if (editMode) {
+                    EditToggles()
+                } else {
+                    user?.let { userData ->
+                        ProfileContent(user = userData)
+                    } ?: run {
+                        Box(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(48.dp)) {
+                            CircularProgressIndicator()
                         }
                     }
-                    Spacer(Modifier.height(4.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text("phone")
-                        Spacer(Modifier.width(8.dp))
-                        IconButton(
-                            onClick = {}
-                        ) {
-                            Icon(Icons.Default.ToggleOff, "")
-                        }
-                    }
-                    Spacer(Modifier.height(4.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text("LinkedIn, GitHub")
-                        Spacer(Modifier.width(8.dp))
-                        IconButton(
-                            onClick = {}
-                        ) {
-                            Icon(Icons.Default.ToggleOff, "")
-                        }
-                    }
-                    Spacer(Modifier.height(4.dp))
-                }
-            } else {
-                user?.let { userData ->
-                    ProfileContent(user = userData)
-                } ?: run {
-                    CircularProgressIndicator(modifier = Modifier.padding(48.dp))
                 }
             }
         }
@@ -192,7 +150,7 @@ fun ProfileContent(user: User) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
+            // Removed verticalScroll: content is inside a LazyColumn item
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -200,7 +158,7 @@ fun ProfileContent(user: User) {
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(context)
-                    //.data() // Use the user's photo URL
+                    .data("") // TODO: replace with user's photo URL when available
                     .crossfade(true)
                     .build(),
                 placeholder = painterResource(id = R.drawable.profile_avatar_placeholder),
@@ -222,7 +180,55 @@ fun ProfileContent(user: User) {
         ProfileInfoRow("Company", user.company)
         ProfileInfoRow("Department", user.department)
         ProfileInfoRow("Email", user.email)
-        // Add more fields as needed, e.g., LinkedIn, etc.
+    }
+}
+
+@Composable
+private fun EditToggles() {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("email")
+            Spacer(Modifier.width(8.dp))
+            IconButton(
+                onClick = {}
+            ) {
+                Icon(Icons.Default.ToggleOff, "")
+            }
+        }
+        Spacer(Modifier.height(4.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("phone")
+            Spacer(Modifier.width(8.dp))
+            IconButton(
+                onClick = {}
+            ) {
+                Icon(Icons.Default.ToggleOff, "")
+            }
+        }
+        Spacer(Modifier.height(4.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("LinkedIn, GitHub")
+            Spacer(Modifier.width(8.dp))
+            IconButton(
+                onClick = {}
+            ) {
+                Icon(Icons.Default.ToggleOff, "")
+            }
+        }
+        Spacer(Modifier.height(4.dp))
     }
 }
 
@@ -239,5 +245,18 @@ fun ProfileInfoRow(label: String, value: String) {
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.SemiBold
         )
+    }
+}
+
+class ProfileViewModelFactory : androidx.lifecycle.ViewModelProvider.Factory {
+    override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(ProfileViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return ProfileViewModel(
+                repo = RepositoryProvider.authRepository,
+                auth = FirebaseAuth.getInstance()
+            ) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
