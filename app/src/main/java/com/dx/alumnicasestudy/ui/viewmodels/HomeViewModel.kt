@@ -102,7 +102,7 @@ class HomeViewModel : ViewModel() {
                 errorMessage = err.message ?: "Failed to load approved users"
             }
         }
-    }
+    }   
 
     fun loadPending() {
         isLoading = true
@@ -142,26 +142,3 @@ class HomeViewModel : ViewModel() {
         }
     }
 }
-
-//data class HomeUiState(
-//    val isLoading: Boolean = false,
-//    val coins: List<User> = emptyList(),
-//    var orderBy: OrderBy = OrderBy.TechStack(OrderType.Ascending),
-//    val error: String? = ""
-//)
-
-//fun getUsers() {
-//    getUsersUseCase(state.value.orderBy).onEach { result ->
-//        when(result) {
-//            is Resource.Loading -> {
-//                _state.value = HomeUiState(true)
-//            }
-//            is Resource.Success -> {
-//                _state.value = HomeUiState(false, users = result.data ?: emptyList())
-//            }
-//            is Resource.Error -> {
-//                _state.value = HomeUiState(false, error = result.msg)
-//            }
-//        }
-//    }
-//} (Sorting function set but not implement yet due to avoiding merge conflict)

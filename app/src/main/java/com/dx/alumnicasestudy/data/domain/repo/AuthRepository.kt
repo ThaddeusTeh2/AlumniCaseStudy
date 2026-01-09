@@ -69,6 +69,15 @@ class AuthRepository(
 
     suspend fun signOut() { auth.signOut() }
 
+    suspend fun getUserById(uid: String): User? {
+        return store.getUser(uid)
+    }
+
+    suspend fun getCurrentUser(): User? {
+        val currentAuthUser = auth.currentUid() ?: return null
+        return getUserById(currentAuthUser)
+    }
+
     suspend fun loadApprovedUsers(namePrefix: String? = null): List<User> = store.queryApprovedUsers(namePrefix)
 
     suspend fun loadPendingUsers(): List<User> = store.queryPendingUsers()

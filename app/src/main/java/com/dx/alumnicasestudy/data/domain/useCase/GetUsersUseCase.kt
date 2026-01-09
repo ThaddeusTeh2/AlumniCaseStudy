@@ -15,6 +15,7 @@ class GetUsersUseCase @Inject constructor(
         when(orderBy.orderType) {
             OrderType.Ascending -> {
                 when(orderBy) {
+                    is OrderBy.Name -> { users.sortedBy { it.name } }
                     is OrderBy.TechStack -> { users.sortedBy { it.role } }
                     is OrderBy.Location -> { users.sortedBy { it.company } }
                     is OrderBy.Graduation -> { users.sortedBy { it.graduation_year } }
@@ -22,6 +23,7 @@ class GetUsersUseCase @Inject constructor(
             }
             OrderType.Descending -> {
                 when(orderBy) {
+                    is OrderBy.Name -> { users.sortedByDescending { it.name } }
                     is OrderBy.TechStack -> { users.sortedByDescending { it.role } }
                     is OrderBy.Location -> { users.sortedByDescending { it.company } }
                     is OrderBy.Graduation -> { users.sortedByDescending { it.graduation_year } }
