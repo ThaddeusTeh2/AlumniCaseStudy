@@ -32,6 +32,7 @@ class HomeViewModel : ViewModel() {
         return when {
             user.role == User.ROLE_ADMIN -> Screens.Home.route
             user.status == User.STATUS_APPROVED -> Screens.Directory.route
+            user.status == User.STATUS_REJECTED -> Screens.Reject.route
             else -> Screens.PendingGate.route
         }
     }
@@ -121,6 +122,23 @@ class HomeViewModel : ViewModel() {
         isLoading = true
         scope.launch {
             val result = repo.approveUser(uid)
+            result.fold(
+                onSuccess = {
+                    loadPending()
+                    isLoading = false
+                },
+                onFailure = { err: Throwable ->
+                    isLoading = false
+                    errorMessage = err.message ?: "Failed to approve user"
+                }
+            )
+        }
+    }
+
+    fun rejectUser(uid: String) {
+        isLoading = true
+        scope.launch {
+            val result = repo.rejectUser(uid)
             result.fold(
                 onSuccess = {
                     loadPending()

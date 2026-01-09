@@ -20,6 +20,7 @@ sealed class Screens(val route: String) {
     }
 
     object MyProfile: Screens("profile")
+    object Reject: Screens("reject")
 }
 
 // Note: Actual NavHost setup will be done in MainActivity with Compose Navigation.

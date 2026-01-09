@@ -37,6 +37,7 @@ fun AdminPendingListScreen(vm: HomeViewModel) {
                         }
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             Button(onClick = { vm.approveUser(user.uid) }) { Text("Approve") }
+                            Button(onClick = {vm.rejectUser(user.uid) }) { Text("Rejected") }
                         }
                     }
                 }

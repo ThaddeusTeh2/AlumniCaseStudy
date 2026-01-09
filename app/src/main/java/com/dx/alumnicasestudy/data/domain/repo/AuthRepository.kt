@@ -84,5 +84,7 @@ class AuthRepository(
 
     suspend fun approveUser(uid: String): Result<Unit> = store.approveUser(uid)
 
+    suspend fun rejectUser(uid: String): Result<Unit> = store.rejectUser(uid)
+
     fun isAdmin(user: User?): Boolean = user?.role == User.ROLE_ADMIN
 }
