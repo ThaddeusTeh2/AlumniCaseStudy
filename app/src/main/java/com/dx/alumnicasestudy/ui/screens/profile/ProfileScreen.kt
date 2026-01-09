@@ -20,12 +20,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ToggleOff
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,11 +42,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.request.ImageRequest
 import coil3.compose.AsyncImage
 import com.dx.alumnicasestudy.R
-import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
+import com.dx.alumnicasestudy.data.domain.models.User
 
 // Profile screen scaffolding (read-only)
 // Purpose:
@@ -54,21 +58,32 @@ import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
 @Composable
 fun ProfileScreen(
     navController: NavController,
-    vm: HomeViewModel = HomeViewModel()
+    vm: ProfileViewModel = hiltViewModel(),
+    userId: String?
 ) {
     val context = LocalContext.current
     var editMode by remember { mutableStateOf(false) }
+
+    val user by vm.user.collectAsState()
+    val isCurrentUser by vm.isCurrentUser.collectAsState()
+
+    LaunchedEffect(userId) {
+        vm.loadUser(userId)
+    }
     Column(modifier = Modifier
         .fillMaxSize()
         .background(MaterialTheme.colorScheme.background)
     ) {
         ProfileHeader(
+            isCurrentUser = isCurrentUser,
             onBackClick = { navController.popBackStack() },
             editMode = editMode,
             onEditClick = { editMode = !editMode }
         )
         Box(
-            Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
         ) {
             if(editMode) {
                 Column(
@@ -115,40 +130,10 @@ fun ProfileScreen(
                     Spacer(Modifier.height(4.dp))
                 }
             } else {
-                Column(
-                    Modifier.fillMaxWidth().padding(16.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        AsyncImage(
-                            model = ImageRequest.Builder(context)
-//                            .data()
-                                .crossfade(true)
-                                .build(),
-                            placeholder = painterResource(id = R.drawable.profile_avatar_placeholder),
-                            error = painterResource(id = R.drawable.profile_error_placeholder),
-                            contentDescription = "",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(80.dp)
-                                .clip(CircleShape)
-                        )
-                        Spacer(Modifier.width(16.dp))
-                        Text("Name: username", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-                    }
-                    Spacer(Modifier.height(16.dp))
-                    Text("Contacts:", style = MaterialTheme.typography.titleMedium)
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text("email,")
-                        Spacer(Modifier.width(4.dp))
-                        Text("phone (optional),")
-                        Spacer(Modifier.width(4.dp))
-                        Text("etc...,")
-                    }
+                user?.let { userData ->
+                    ProfileContent(user = userData)
+                } ?: run {
+                    CircularProgressIndicator(modifier = Modifier.padding(48.dp))
                 }
             }
         }
@@ -157,6 +142,7 @@ fun ProfileScreen(
 
 @Composable
 fun ProfileHeader(
+    isCurrentUser: Boolean,
     onBackClick: () -> Unit,
     editMode: Boolean,
     onEditClick: () -> Unit
@@ -183,17 +169,75 @@ fun ProfileHeader(
             }
 
             Text(
-                "Profile Settings",
+                 if (isCurrentUser) "My Profile" else "Alumni Profile",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.weight(1f)
             )
 
-            IconButton(
-                onClick = onEditClick
-            ) {
-                Icon(Icons.Default.Edit, "", modifier = Modifier.size(24.dp))
+            if(isCurrentUser) {
+                IconButton(
+                    onClick = onEditClick
+                ) {
+                    Icon(Icons.Default.Edit, "", modifier = Modifier.size(24.dp))
+                }
             }
         }
+    }
+}
+
+@Composable
+fun ProfileContent(user: User) {
+    val context = LocalContext.current
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AsyncImage(
+                model = ImageRequest.Builder(context)
+                    //.data() // Use the user's photo URL
+                    .crossfade(true)
+                    .build(),
+                placeholder = painterResource(id = R.drawable.profile_avatar_placeholder),
+                error = painterResource(id = R.drawable.profile_error_placeholder),
+                contentDescription = "Profile Picture",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape)
+            )
+            Spacer(Modifier.width(16.dp))
+            Column {
+                Text(user.name, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text("Graduated: ${user.graduation_year}", style = MaterialTheme.typography.bodyLarge)
+            }
+        }
+        Spacer(Modifier.height(24.dp))
+        ProfileInfoRow("Role", user.job_title)
+        ProfileInfoRow("Company", user.company)
+        ProfileInfoRow("Department", user.department)
+        ProfileInfoRow("Email", user.email)
+        // Add more fields as needed, e.g., LinkedIn, etc.
+    }
+}
+
+@Composable
+fun ProfileInfoRow(label: String, value: String) {
+    Column(modifier = Modifier.padding(vertical = 8.dp)) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.SemiBold
+        )
     }
 }
