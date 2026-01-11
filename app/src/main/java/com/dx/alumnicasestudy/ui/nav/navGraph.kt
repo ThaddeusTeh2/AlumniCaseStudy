@@ -13,6 +13,7 @@ import com.dx.alumnicasestudy.ui.screens.login.LoginScreen
 import com.dx.alumnicasestudy.ui.screens.pending.PendingGateScreen
 import com.dx.alumnicasestudy.ui.screens.profile.ProfileScreen
 import com.dx.alumnicasestudy.ui.screens.register.RegisterScreen
+import com.dx.alumnicasestudy.ui.screens.rejected.RejectedScreen
 import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
 
 @Suppress("FunctionNaming")
@@ -40,6 +41,9 @@ fun NavGraph(navController: NavHostController, vm: HomeViewModel) {
         // Use the distinct 'MyProfile' route you created.
         composable(route = Screens.MyProfile.route) { // This should be "profile"
             ProfileScreen(navController = navController, userId = null)
+        }
+        composable(route= Screens.Reject.route) {
+            RejectedScreen()
         }
     }
 }

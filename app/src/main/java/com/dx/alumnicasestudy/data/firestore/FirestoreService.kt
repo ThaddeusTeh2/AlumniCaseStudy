@@ -41,6 +41,19 @@ class FirestoreService {
         }
     }
 
+    suspend fun queryRejectedUsers(namePrefix: String? = null): List<User> {
+        return try {
+            val base = users.whereEqualTo("status", User.STATUS_REJECTED)
+            val snaps = base.get().await()
+            val all = snaps.documents.mapNotNull { it.toUser() }
+            val prefix = namePrefix?.trim()?.lowercase().orEmpty()
+            val filtered = if (prefix.isBlank()) all else all.filter { it.name_lowercase.startsWith(prefix) }
+            filtered.sortedBy { it.name_lowercase }
+        } catch (_: Throwable) {
+            emptyList()
+        }
+    }
+
     suspend fun queryPendingUsers(): List<User> {
         return try {
             val snaps = users.whereEqualTo("status", User.STATUS_PENDING).get().await()
@@ -53,6 +66,15 @@ class FirestoreService {
     suspend fun approveUser(uid: String): Result<Unit> {
         return try {
             users.document(uid).update(mapOf("status" to User.STATUS_APPROVED)).await()
+            Result.success(Unit)
+        } catch (t: Throwable) {
+            Result.failure(t)
+        }
+    }
+
+    suspend fun rejectUser(uid: String): Result<Unit> {
+        return try {
+            users.document(uid).update(mapOf("status" to User.STATUS_REJECTED)).await()
             Result.success(Unit)
         } catch (t: Throwable) {
             Result.failure(t)
