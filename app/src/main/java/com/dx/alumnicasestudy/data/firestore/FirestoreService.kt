@@ -80,6 +80,16 @@ class FirestoreService {
             Result.failure(t)
         }
     }
+
+    suspend fun updateUser(user: User): Result<Unit> {
+        return try {
+            val doc = user.copy(name_lowercase = user.name.lowercase())
+            users.document(user.uid).set(doc.toMap(), SetOptions.merge()).await()
+            Result.success(Unit)
+        } catch (t: Throwable) {
+            Result.failure(t)
+        }
+    }
 }
 
 private fun User.toMap(): Map<String, Any?> = mapOf(

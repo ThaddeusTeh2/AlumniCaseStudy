@@ -36,4 +36,14 @@ class ProfileViewModel(
             }
         }
     }
+
+    fun updateUser(updated: User, onResult: (Result<Unit>) -> Unit) {
+        viewModelScope.launch {
+            val result = repo.updateUser(updated)
+            if (result.isSuccess) {
+                _user.value = updated
+            }
+            onResult(result)
+        }
+    }
 }
