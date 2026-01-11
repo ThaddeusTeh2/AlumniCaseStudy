@@ -1,27 +1,9 @@
 package com.dx.alumnicasestudy.ui.screens.login
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -29,12 +11,17 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.dx.alumnicasestudy.ui.nav.Screens
+import com.dx.alumnicasestudy.ui.theme.NavyBlue
+import com.dx.alumnicasestudy.ui.theme.OnNavy
 import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(navController: NavController = rememberNavController(), vm: HomeViewModel) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier
@@ -44,6 +31,9 @@ fun LoginScreen(navController: NavController = rememberNavController(), vm: Home
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            // Snackbar host
+            SnackbarHost(hostState = snackbarHostState)
+
             Text("Login", style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(
@@ -64,24 +54,42 @@ fun LoginScreen(navController: NavController = rememberNavController(), vm: Home
             Button(
                 onClick = {
                     vm.login(email, password) { route ->
+                        scope.launch { snackbarHostState.showSnackbar("Login successful") }
                         navController.navigate(route)
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = true
+                enabled = true,
+                colors = ButtonDefaults.buttonColors(containerColor = NavyBlue, contentColor = OnNavy),
+                shape = RoundedCornerShape(8.dp)
             ) {
                 Text("Login")
             }
             Spacer(Modifier.height(16.dp))
-            Row(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+            // Move navigation prompt and button to their own line below
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text("Don't have an account?")
-                TextButton(onClick = { navController.navigate(Screens.Register.route) }) {
+                Spacer(Modifier.height(8.dp))
+                Button(
+                    onClick = {
+                        scope.launch { snackbarHostState.showSnackbar("Navigate to register") }
+                        navController.navigate(Screens.Register.route)
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = NavyBlue, contentColor = OnNavy),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
                     Text("Sign up!")
                 }
+            }
+        }
+
+        // Show login error codes via snackbar
+        LaunchedEffect(vm.errorMessage) {
+            vm.errorMessage?.let { msg ->
+                scope.launch { snackbarHostState.showSnackbar(msg) }
             }
         }
     }
