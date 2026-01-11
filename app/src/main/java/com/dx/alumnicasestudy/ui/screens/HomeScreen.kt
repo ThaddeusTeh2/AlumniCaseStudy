@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -33,6 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.dx.alumnicasestudy.ui.nav.Screens
+import com.dx.alumnicasestudy.ui.theme.NavyBlue
+import com.dx.alumnicasestudy.ui.theme.OnNavy
+import androidx.compose.foundation.shape.RoundedCornerShape
 
 // UI-only placeholder for the Alumni Directory screen
 @OptIn(ExperimentalMaterial3Api::class)
@@ -200,7 +204,7 @@ fun LoginScreen() {
             Spacer(Modifier.height(8.dp))
             OutlinedTextField(value = "", onValueChange = {}, placeholder = { Text("Password") })
             Spacer(Modifier.height(16.dp))
-            Button(onClick = { /* no-op for now */ }) { Text("Sign In") }
+            Button(onClick = { /* no-op for now */ }, colors = ButtonDefaults.buttonColors(containerColor = NavyBlue, contentColor = OnNavy), shape = RoundedCornerShape(8.dp)) { Text("Sign In") }
         }
     }
 }
@@ -224,7 +228,7 @@ fun RegisterScreen() {
             Spacer(Modifier.height(8.dp))
             OutlinedTextField(value = "", onValueChange = {}, placeholder = { Text("Password") })
             Spacer(Modifier.height(16.dp))
-            Button(onClick = { /* no-op for now */ }) { Text("Create Account") }
+            Button(onClick = { /* no-op for now */ }, colors = ButtonDefaults.buttonColors(containerColor = NavyBlue, contentColor = OnNavy), shape = RoundedCornerShape(8.dp)) { Text("Create Account") }
         }
     }
 }
@@ -265,15 +269,15 @@ fun HomeScreen(navController: NavController = rememberNavController()) {
         ) {
             Text("Home", style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.height(24.dp))
-            Button(onClick = { navController.navigate(Screens.Directory.route) }, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = { navController.navigate(Screens.Directory.route) }, modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(containerColor = NavyBlue, contentColor = OnNavy), shape = RoundedCornerShape(8.dp)) {
                 Text("Go to Directory")
             }
             Spacer(Modifier.height(12.dp))
-            Button(onClick = { navController.navigate(Screens.PendingGate.route) }, modifier = Modifier.fillMaxWidth()) {
-                Text("Pending Gate")
+            Button(onClick = { navController.navigate(Screens.PendingGate.route) }, modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(containerColor = NavyBlue, contentColor = OnNavy), shape = RoundedCornerShape(8.dp)) {
+                Text("Admin - Pending Gate")
             }
             Spacer(Modifier.height(12.dp))
-            Button(onClick = { navController.navigate(Screens.AdminApprovals.route) }, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = { navController.navigate(Screens.AdminApprovals.route) }, modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(containerColor = NavyBlue, contentColor = OnNavy), shape = RoundedCornerShape(8.dp)) {
                 Text("Admin - Pending Approvals")
             }
         }
