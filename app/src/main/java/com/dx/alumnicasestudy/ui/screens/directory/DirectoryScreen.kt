@@ -83,89 +83,94 @@ fun DirectoryScreen(navController: NavController, vm: HomeViewModel) {
 
         // Filters: sort above search
         Column(modifier = Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            OutlinedTextField(
-                value = selectedOption,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("Alumni filter") },
-                trailingIcon = {
-                    Icon(
-                        Icons.Default.ArrowDropDown,
-                        "",
-                        modifier = Modifier.clickable{ expanded = true }
-                    )
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-            DropdownMenu(
-                modifier = Modifier.fillMaxWidth().padding(8.dp),
+            ExposedDropdownMenuBox(
                 expanded = expanded,
-                onDismissRequest = { expanded = false }
+                onExpandedChange = { expanded = !expanded },
+                modifier = Modifier.fillMaxWidth()
             ) {
-                DropdownMenuItem(
-                    text = { Text("Name Ascend") },
-                    onClick = {
-                        selectedOption = "Name Ascend"
-                        expanded = false
-                        scope.launch { snackbarHostState.showSnackbar("Sorted by Name Ascend") }
-                    }
+                OutlinedTextField(
+                    value = selectedOption,
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text("Alumni filter") },
+                    trailingIcon = {
+                        Icon(
+                            Icons.Default.ArrowDropDown,
+                            "",
+                            modifier = Modifier.clickable{ expanded = true }
+                        )
+                    },
+                    modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true).fillMaxWidth()
                 )
-                DropdownMenuItem(
-                    text = { Text("Name Descend") },
-                    onClick = {
-                        selectedOption = "Name Descend"
-                        expanded = false
-                        scope.launch { snackbarHostState.showSnackbar("Sorted by Name Descend") }
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Graduation Ascend") },
-                    onClick = {
-                        selectedOption = "Graduation Ascend"
-                        expanded = false
-                        scope.launch { snackbarHostState.showSnackbar("Sorted by Graduation Ascend") }
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Graduation Descend") },
-                    onClick = {
-                        selectedOption = "Graduation Descend"
-                        expanded = false
-                        scope.launch { snackbarHostState.showSnackbar("Sorted by Graduation Descend") }
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("TechStack Ascend") },
-                    onClick = {
-                        selectedOption = "TechStack Ascend"
-                        expanded = false
-                        scope.launch { snackbarHostState.showSnackbar("Sorted by TechStack Ascend") }
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("TechStack Descend") },
-                    onClick = {
-                        selectedOption = "TechStack Descend"
-                        expanded = false
-                        scope.launch { snackbarHostState.showSnackbar("Sorted by TechStack Descend") }
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Location Ascend") },
-                    onClick = {
-                        selectedOption = "Location Ascend"
-                        expanded = false
-                        scope.launch { snackbarHostState.showSnackbar("Sorted by Location Ascend") }
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Location Descend") },
-                    onClick = {
-                        selectedOption = "Location Descend"
-                        expanded = false
-                        scope.launch { snackbarHostState.showSnackbar("Sorted by Location Descend") }
-                    }
-                )
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Name Ascend") },
+                        onClick = {
+                            selectedOption = "Name Ascend"
+                            expanded = false
+                            scope.launch { snackbarHostState.showSnackbar("Sorted by Name Ascend") }
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Name Descend") },
+                        onClick = {
+                            selectedOption = "Name Descend"
+                            expanded = false
+                            scope.launch { snackbarHostState.showSnackbar("Sorted by Name Descend") }
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Graduation Ascend") },
+                        onClick = {
+                            selectedOption = "Graduation Ascend"
+                            expanded = false
+                            scope.launch { snackbarHostState.showSnackbar("Sorted by Graduation Ascend") }
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Graduation Descend") },
+                        onClick = {
+                            selectedOption = "Graduation Descend"
+                            expanded = false
+                            scope.launch { snackbarHostState.showSnackbar("Sorted by Graduation Descend") }
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("TechStack Ascend") },
+                        onClick = {
+                            selectedOption = "TechStack Ascend"
+                            expanded = false
+                            scope.launch { snackbarHostState.showSnackbar("Sorted by TechStack Ascend") }
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("TechStack Descend") },
+                        onClick = {
+                            selectedOption = "TechStack Descend"
+                            expanded = false
+                            scope.launch { snackbarHostState.showSnackbar("Sorted by TechStack Descend") }
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Location Ascend") },
+                        onClick = {
+                            selectedOption = "Location Ascend"
+                            expanded = false
+                            scope.launch { snackbarHostState.showSnackbar("Sorted by Location Ascend") }
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Location Descend") },
+                        onClick = {
+                            selectedOption = "Location Descend"
+                            expanded = false
+                            scope.launch { snackbarHostState.showSnackbar("Sorted by Location Descend") }
+                        }
+                    )
+                }
             }
             OutlinedTextField(
                 value = searchText,
