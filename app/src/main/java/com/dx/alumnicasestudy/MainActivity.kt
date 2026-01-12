@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             AlumniCaseStudyTheme {
                 val navController = rememberNavController()
-                val vm: HomeViewModel = viewModel()
+                val vm: com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel = viewModel()
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Box(Modifier.padding(innerPadding)) {
                         NavGraph(navController = navController, vm = vm)

@@ -1,19 +1,19 @@
 package com.dx.alumnicasestudy.ui.screens.home
 
+// Deprecated: Hilt-based duplicate HomeViewModel (not used). Prefer com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel.
+// Remove Hilt annotations and jakarta imports to prevent crashes if accidentally referenced.
+
 import androidx.lifecycle.ViewModel
 import com.dx.alumnicasestudy.core.Resource
 import com.dx.alumnicasestudy.data.domain.models.User
 import com.dx.alumnicasestudy.data.domain.useCase.GetUsersUseCase
 import com.dx.alumnicasestudy.data.domain.util.OrderBy
 import com.dx.alumnicasestudy.data.domain.util.OrderType
-import dagger.hilt.android.lifecycle.HiltViewModel
-import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onEach
 
-@HiltViewModel
-class HomeViewModel @Inject constructor(
+class HomeViewModel(
     private val getUsersUseCase: GetUsersUseCase
 ): ViewModel() {
 

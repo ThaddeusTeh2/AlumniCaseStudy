@@ -9,16 +9,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.dx.alumnicasestudy.ui.viewmodels.HomeViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun AdminPendingListScreen(vm: HomeViewModel) {
     val isAdmin = vm.currentUser?.isAdmin ?: (vm.currentUser?.role == "admin")
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         if (isAdmin) vm.loadPending()
     }
 
     Column(Modifier.fillMaxSize().statusBarsPadding().padding(16.dp)) {
+        // Snackbar host for feedback
+        SnackbarHost(hostState = snackbarHostState)
+
         Row {
             Text("Admin - Pending Approvals", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
         }
@@ -30,16 +37,30 @@ fun AdminPendingListScreen(vm: HomeViewModel) {
         LazyColumn(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(vm.pendingUsers) { user ->
                 Card {
-                    Row(Modifier.fillMaxWidth().padding(12.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Column {
-                            Text(user.name, style = MaterialTheme.typography.titleMedium)
-                            Text("Status: ${user.status}")
-                        }
+                    Column(Modifier.fillMaxWidth().padding(12.dp)) {
+                        // User info section
+                        Text(user.name, style = MaterialTheme.typography.titleMedium)
+                        Text("Status: ${user.status}")
+                        Spacer(Modifier.height(12.dp))
+                        // Actions section (stacked below info)
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Button(onClick = { vm.approveUser(user.uid) }) { Text("Approve") }
+                            Button(onClick = {
+                                vm.approveUser(user.uid)
+                                scope.launch { snackbarHostState.showSnackbar("Approved ${user.name}") }
+                            }) { Text("Approve") }
+                            Button(onClick = {
+                                vm.rejectUser(user.uid)
+                                scope.launch { snackbarHostState.showSnackbar("Rejected ${user.name}") }
+                            }) { Text("Reject") }
                         }
                     }
                 }
+            }
+        }
+        // Show errors from VM if any
+        LaunchedEffect(vm.errorMessage) {
+            vm.errorMessage?.let { msg ->
+                scope.launch { snackbarHostState.showSnackbar(msg) }
             }
         }
     }
